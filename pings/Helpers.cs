@@ -5,13 +5,18 @@ using System.Threading;
 
 namespace pings
 {
+    
     internal class Helpers
     {
+        static int Runs = 0;
+        private static int AVG = 0;
         public static void printigList(List<string> Pings)
         {
             foreach (var ping in Pings)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ping);
+                Console.ResetColor();
             }
         }
         public static void setingCursor(int left, int top)
@@ -22,10 +27,25 @@ namespace pings
         {
             Thread.Sleep(time);
         }
-
-        public static void ClearSection()
+        public static void ClearSection(int length, int WhereLeft, int WhereTop)
         {
-            
+            Helpers.setingCursor(WhereLeft, WhereTop);
+            for (int i = 0; i < length; i++)
+            {
+               Console.Write(" ");
+               sleeping(10);
+            }
+        }
+      public static int count()
+      {
+          Runs++;
+          return Runs;
+      }
+      public static void NumberOfX(string x, int count)
+      {
+          Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($"{x}:{count}");
+            Console.ResetColor();
         }
     }
 }
