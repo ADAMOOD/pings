@@ -27,16 +27,13 @@ namespace pings
                {
                    Head(onlyStartDate);
                    onlyStartDate = false;
-                   if (Cursor)
-                   {
-                       setingCursor();
-                       Cursor = false;
-                   }
-                   Pinging();
+                   Helpers.setingCursor(0, i + CursorUnderHeadY);
+                    Pinging();
                }
-               sleeping();
-               printigList();
-            }
+               Helpers.sleeping(time);
+               Helpers.setingCursor(0, CursorUnderHeadY);
+               Helpers.printigList(Pings);
+           }
         }
         private static void Head(bool checkForDate)
         {
@@ -55,49 +52,34 @@ namespace pings
             PingReply reply = ping.Send(IPAddress);
             stopwatch.Stop();
             var timeOfPing = stopwatch.ElapsedMilliseconds;
-            CheckIfPingWasSuccessful(reply, timeOfPing);
+            CheckIfPingWasSuccessful(reply);
+            TimeBars.PrintTimeBar(reply.RoundtripTime);
         }
-        private static void CheckIfPingWasSuccessful(PingReply reply, long timeOfPing)
+        private static void CheckIfPingWasSuccessful(PingReply reply)
         {
             if (reply.Status.ToString().Equals("Success"))
             {
-                AddingInfoAboutPingToList(reply, timeOfPing);
+                AddingInfoAboutPingToList(reply, Pings);
             }
             else
             {
                 Console.WriteLine(reply.Status.ToString());
             }
         }
-        private static void AddingInfoAboutPingToList(PingReply reply, long timeOfPing)
+        private static void AddingInfoAboutPingToList(PingReply reply,List<string> Pings)
         {
             var index = Pings.Count;
             if (index > BorderOfPrintingList)
             {
                 MoveList(DeletedIndex);
-                setingCursor();
+                Helpers.setingCursor(0, CursorUnderHeadY);
             }
             Pings.Add($"reply from  {reply.Address}: bytes={reply.Buffer.Length} time={reply.RoundtripTime}ms TTL={reply.Options.Ttl}");
         }
-
         private static void MoveList(int oldIndex)
         {
             Pings.RemoveAt(oldIndex);
         }
-        private static void printigList()
-        {
-            foreach (var VARIABLE in Pings)
-            {
-                Console.WriteLine(VARIABLE);
-            }
-        }
-        private  static void setingCursor()
-        {
-            Console.SetCursorPosition(0, CursorUnderHeadY);
-        }
 
-        private static void sleeping()
-        {
-            Thread.Sleep(time);
-        }
     }
 }
