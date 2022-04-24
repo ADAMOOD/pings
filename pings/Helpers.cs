@@ -47,5 +47,11 @@ namespace pings
             Console.Write($"{x}:{count}");
             Console.ResetColor();
         }
+      public static int DividedByXAndRoundedIt(int divisor, int dividend)
+      {
+          double division = (dividend / divisor);
+          int roundedDivision = (int)Math.Round(division);
+          return roundedDivision;
+      }
     }
 }

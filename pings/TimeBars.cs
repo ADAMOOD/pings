@@ -6,10 +6,10 @@ namespace pings
     {
         const char Char = '\u2591';
 
-        public static void PrintTimeBar(int steps, int WhereLeft, int WhereTop, bool DeleterAndColor)
+        public static void PrintTimeBar(int steps,int Time, int WhereLeft, int WhereTop, bool DeleteRowAndColor)
         {
             Helpers.setingCursor(WhereLeft, WhereTop);
-            if (DeleterAndColor)
+            if (DeleteRowAndColor)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
             }
@@ -21,15 +21,15 @@ namespace pings
             {
                 Console.Write(Char);
             }
-            if (DeleterAndColor)
+            Console.Write($"{Time}ms");
+            if (DeleteRowAndColor)
             {
                 BarDeleter(steps, WhereLeft, WhereTop);
             }
         }
         private static void BarDeleter(int steps, int WhereLeft, int WhereTop)
         {
-            Console.Write($"{steps}ms");
-            Helpers.setingCursor(30, 0);
+            Helpers.setingCursor(WhereLeft, WhereTop);
             Helpers.sleeping(1000);
             Helpers.ClearSection(steps + 6, WhereLeft, WhereTop);
         }

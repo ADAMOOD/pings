@@ -10,15 +10,15 @@ namespace pings
 {
     internal class Program
     {
-        const string IPAddress = "8.8.4.4";
+        const string IPAddress = "159.49.47.135";
         private const int CursorUnderHeadY = 3;
         private const int BorderOfPrintingList = 25;
         private const int DeletedIndex = 0;
-        private const int time = 200;
+        private const int Block = 10;
         static List<string> Pings = new List<string>();
         static int Succes;
-        private static int Fail;
-
+        static int Fail;
+        static int RoundedTime;
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
@@ -33,7 +33,6 @@ namespace pings
                     Helpers.setingCursor(0, i + CursorUnderHeadY);
                     Pinging();
                 }
-
                 Helpers.setingCursor(0, CursorUnderHeadY);
                 Helpers.printigList(Pings);
             }
@@ -47,31 +46,28 @@ namespace pings
             {
                 Console.WriteLine(DateTime.Now.ToString("yyyy'-'MM'-'dd'|'HH':'mm':'ss"));
             }
-
             Console.ResetColor();
             Helpers.setingCursor(0, 1);
             Helpers.NumberOfX("Succesful", Succes);
             Helpers.setingCursor(0, 2);
             Helpers.NumberOfX("Failed", Fail);
         }
-
         private static void Pinging()
         {
-            var stopwatch = Stopwatch.StartNew();
             Ping ping = new Ping();
             PingReply reply = ping.Send(IPAddress);
-            stopwatch.Stop();
             CheckIfPingWasSuccessful(reply);
-            TimeBars.PrintTimeBar((int) reply.RoundtripTime, 40, 2, true);
+            
         }
-
         private static void CheckIfPingWasSuccessful(PingReply reply)
         {
             if (reply.Status.ToString().Equals("Success"))
             {
                 Succes = Helpers.count();
+                RoundedTime = Helpers.DividedByXAndRoundedIt(Block, (int) reply.RoundtripTime);
                 PrintPing(reply);
                 AddingInfoAboutPingToList(reply, Pings);
+                TimeBars.PrintTimeBar(RoundedTime,(int)reply.RoundtripTime, 40, 2, true);
             }
             else
             {
