@@ -8,38 +8,42 @@ namespace pings
     
     internal class Helpers
     {
-        static int Runs = 0;
-        private static int AVG = 0;
-        public static void printigList(List<string> Pings)
+        
+
+        public static void PrintigList(List<string> pings)
         {
-            foreach (var ping in Pings)
+            foreach (var ping in pings)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ping);
                 Console.ResetColor();
             }
         }
-        public static void setingCursor(int left, int top)
+        public static void SetingCursor(int left, int top)
         {
             Console.SetCursorPosition(left, top);
         }
-        public static void sleeping(int time)
+        public static void Sleeping(int time)
         {
             Thread.Sleep(time);
         }
-        public static void ClearSection(int length, int WhereLeft, int WhereTop)
+        public static void ClearSection(int length, int whereLeft, int whereTop, bool graduallyDeleted)
         {
-            Helpers.setingCursor(WhereLeft, WhereTop);
+            SetingCursor(whereLeft, whereTop);
             for (int i = 0; i < length; i++)
             {
                Console.Write(" ");
-               sleeping(10);
+               if (graduallyDeleted)
+               {
+                   Sleeping(5);
+                }
+               
             }
         }
-      public static int count()
+      public static int Count(int input)
       {
-          Runs++;
-          return Runs;
+          input++;
+          return input;
       }
       public static void NumberOfX(string x, int count)
       {
@@ -51,6 +55,10 @@ namespace pings
       {
           double division = (dividend / divisor);
           int roundedDivision = (int)Math.Round(division);
+          if (roundedDivision < 1)
+          {
+              roundedDivision=1;
+          }
           return roundedDivision;
       }
     }
