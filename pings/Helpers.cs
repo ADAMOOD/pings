@@ -5,48 +5,31 @@ using System.Threading;
 
 namespace pings
 {
-    
     internal class Helpers
     {
-        
-
         public static void PrintigList(List<string> pings)
         {
             foreach (var ping in pings)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(ping);
                 Console.ResetColor();
             }
         }
-        public static void SetingCursor(int left, int top)
-        {
-            Console.SetCursorPosition(left, top);
-        }
-        public static void Sleeping(int time)
-        {
-            Thread.Sleep(time);
-        }
         public static void ClearSection(int length, int whereLeft, int whereTop, bool graduallyDeleted)
         {
-            SetingCursor(whereLeft, whereTop);
+            Console.SetCursorPosition(whereLeft, whereTop);
             for (int i = 0; i < length; i++)
             {
                Console.Write(" ");
                if (graduallyDeleted)
                {
-                   Sleeping(5);
+                   Thread.Sleep(5);
                 }
-               
             }
         }
-      public static int Count(int input)
-      {
-          input++;
-          return input;
-      }
-      public static void NumberOfX(string x, int count)
-      {
+        public static void NumberOfX(string x, int count)
+        {
           Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"{x}:{count}");
             Console.ResetColor();
@@ -57,9 +40,15 @@ namespace pings
           int roundedDivision = (int)Math.Round(division);
           if (roundedDivision < 1)
           {
-              roundedDivision=1;
+              return 1;
           }
-          return roundedDivision;
+            return roundedDivision;
+      }
+
+      public static int average(int number, int sum,int original)
+      {
+          int whole = sum + original;
+          return whole / number;
       }
     }
 }

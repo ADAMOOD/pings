@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace pings
 {
@@ -8,7 +9,7 @@ namespace pings
 
         public static void PrintTimeBar(int steps,int time, int whereLeft, int whereTop, bool deleteRowAndColor)
         {
-            Helpers.SetingCursor(whereLeft, whereTop);
+            Console.SetCursorPosition(whereLeft, whereTop);
             if (deleteRowAndColor)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -17,6 +18,7 @@ namespace pings
             else
             {
                 Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("avg Ping time");
             }
             for (int i = 1; i <= steps; i++)
             {
@@ -27,10 +29,11 @@ namespace pings
             {
                 BarDeleter(steps, whereLeft, whereTop);
             }
+
         }
         private static void BarDeleter(int steps, int whereLeft, int whereTop)
         {
-            Helpers.Sleeping(1000);
+            Thread.Sleep(1000);
             Helpers.ClearSection(steps + 15, whereLeft+12, whereTop,true);
         }
     }

@@ -18,8 +18,7 @@ namespace pings
         static List<string> _pings = new List<string>();
         static int _succes;
         static int _fail;
-        static int _roundedTime;
-
+        static int _avg;
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
@@ -30,21 +29,20 @@ namespace pings
                 for (int i = 0; i < BorderOfPrintingList; i++)
                 {
                     Head();
-                    Helpers.SetingCursor(0, i + CursorUnderHeadY);
+                    Console.SetCursorPosition(0, i + CursorUnderHeadY);
                     Pinging();
                     Helpers.ClearSection(60, 0, i + 4,false);
                 }
-
-                Helpers.SetingCursor(0, CursorUnderHeadY);
+                Console.SetCursorPosition(0, CursorUnderHeadY);
                 Helpers.PrintigList(_pings);
             }
         }
 
         private static void Head()
         {
-            Helpers.SetingCursor(0, 1);
+            Console.SetCursorPosition(0, 1);
             Helpers.NumberOfX("Succesful", _succes);
-            Helpers.SetingCursor(0, 2);
+            Console.SetCursorPosition(0, 2);
             Helpers.NumberOfX("Failed", _fail);
         }
 
@@ -67,20 +65,28 @@ namespace pings
         {
             if (reply.Status.ToString().Equals("Success"))
             {
-                _succes = Helpers.Count(_succes);
-                _roundedTime = Helpers.DividedByXAndRoundedIt(Block, (int) reply.RoundtripTime);
+                int roundedTime;
+                int roundedAvgTime;
+                _succes++;
+                _avg = Helpers.average(_succes, (int) reply.RoundtripTime, _avg);
+                roundedTime = Helpers.DividedByXAndRoundedIt(Block, (int) reply.RoundtripTime);
+                roundedAvgTime = Helpers.DividedByXAndRoundedIt(Block, _avg);
                 PrintPing(reply);
                 AddingInfoAboutPingToList(reply, _pings);
-                TimeBars.PrintTimeBar(_roundedTime, (int) reply.RoundtripTime, 20, 2, true);
+                Helpers.ClearSection(60, 20, 1, false);
+              //TimeBars.PrintTimeBar(roundedAvgTime, _avg, 20, 1, false);
+                TimeBars.PrintTimeBar(roundedTime, (int) reply.RoundtripTime, 20, 2, true);
             }
             else
             {
-                _fail = Helpers.Count(_fail);
+                _fail++;
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(reply.Status.ToString());
-                Helpers.Sleeping(1000);
+                Console.ResetColor();
+                Thread.Sleep(1000);
+                
             }
         }
-
         private static void PrintPing(PingReply reply)
         {
            
@@ -94,7 +100,7 @@ namespace pings
             if (index > BorderOfPrintingList)
             {
                 MoveList(DeletedIndex);
-                Helpers.SetingCursor(0, CursorUnderHeadY);
+                Console.SetCursorPosition(0, CursorUnderHeadY);
             }
 
             pings.Add(
