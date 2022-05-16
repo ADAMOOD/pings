@@ -68,13 +68,13 @@ namespace pings
                 int roundedTime;
                 int roundedAvgTime;
                 _succes++;
-                _avg = Helpers.average(_succes, (int) reply.RoundtripTime, _avg);
+                _avg = Helpers.average(_succes, (int) reply.RoundtripTime);
                 roundedTime = Helpers.DividedByXAndRoundedIt(Block, (int) reply.RoundtripTime);
                 roundedAvgTime = Helpers.DividedByXAndRoundedIt(Block, _avg);
                 PrintPing(reply);
                 AddingInfoAboutPingToList(reply, _pings);
                 Helpers.ClearSection(60, 20, 1, false);
-              //TimeBars.PrintTimeBar(roundedAvgTime, _avg, 20, 1, false);
+                TimeBars.PrintTimeBar(roundedAvgTime, _avg, 20, 1, false);
                 TimeBars.PrintTimeBar(roundedTime, (int) reply.RoundtripTime, 20, 2, true);
             }
             else

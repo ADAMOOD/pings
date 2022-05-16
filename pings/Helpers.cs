@@ -7,6 +7,7 @@ namespace pings
 {
     internal class Helpers
     {
+        private static int neco { get; set; }
         public static void PrintigList(List<string> pings)
         {
             foreach (var ping in pings)
@@ -45,9 +46,18 @@ namespace pings
             return roundedDivision;
       }
 
-      public static int average(int number, int sum,int original)
+      public static int average(int number, int sum)
       {
-          int whole = sum + original;
+          neco += sum;
+          int whole;
+          if (number > 1)
+          {
+              whole =  neco;
+          }
+          else
+          {
+              whole=sum;
+          }
           return whole / number;
       }
     }
