@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
@@ -10,8 +10,8 @@ namespace pings
 {
     internal class Program
     {
-        const string IpAddress = "159.49.47.136";
-        private const int CursorUnderHeadY = 3;
+        static string IpAddress = "8.8.8.8";
+        private const int CursorUnderHeadY = 4;
         private const int BorderOfPrintingList = 25;
         private const int DeletedIndex = 0;
         private const int Block = 10;
@@ -19,9 +19,16 @@ namespace pings
         static int _succes;
         static int _fail;
         static int _avg;
-        static void Main(string[] args)
+		static string dataForPing = "HELLO KEENMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
+		static byte[] buffer = Encoding.ASCII.GetBytes(dataForPing);
+		static void Main(string[] args)
         {
-            Console.CursorVisible = false;
+	        Console.Clear();
+	        if (args.Length != 0)
+	        {
+		        IpAddress = args[0];
+	        }
+			Console.CursorVisible = false;
             bool cursor = true;
             PrintStartDate();
             while (true)
@@ -31,7 +38,7 @@ namespace pings
                     Head();
                     Console.SetCursorPosition(0, i + CursorUnderHeadY);
                     Pinging();
-                    Helpers.ClearSection(60, 0, i + 4,false);
+                    Helpers.ClearSection(60, 0, i + 5,false);
                 }
                 Console.SetCursorPosition(0, CursorUnderHeadY);
                 Helpers.PrintigList(_pings);
@@ -41,7 +48,7 @@ namespace pings
         private static void Head()
         {
             Console.SetCursorPosition(0, 1);
-            Helpers.NumberOfX("Succesful", _succes);
+            Helpers.NumberOfX("Successful", _succes);
             Console.SetCursorPosition(0, 2);
             Helpers.NumberOfX("Failed", _fail);
         }
@@ -56,8 +63,9 @@ namespace pings
 
         private static void Pinging()
         {
+
             Ping ping = new Ping();
-            PingReply reply = ping.Send(IpAddress);
+            PingReply reply = ping.Send(IpAddress,1000,buffer);
             CheckIfPingWasSuccessful(reply);
         }
 
@@ -72,7 +80,7 @@ namespace pings
                 roundedTime = Helpers.DividedByXAndRoundedIt(Block, (int) reply.RoundtripTime);
                 roundedAvgTime = Helpers.DividedByXAndRoundedIt(Block, _avg);
                 PrintPing(reply);
-                AddingInfoAboutPingToList(reply, _pings);
+                AddingInfoAboutPingToList(reply, _pings,true);
                 Helpers.ClearSection(60, 20, 1, false);
                 TimeBars.PrintTimeBar(roundedAvgTime, _avg, 20, 1, false);
                 TimeBars.PrintTimeBar(roundedTime, (int) reply.RoundtripTime, 20, 2, true);
@@ -83,7 +91,8 @@ namespace pings
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(reply.Status.ToString());
                 Console.ResetColor();
-                Thread.Sleep(1000);
+                AddingInfoAboutPingToList(reply, _pings,false);
+				Thread.Sleep(1000);
                 
             }
         }
@@ -94,7 +103,7 @@ namespace pings
                 $"reply from  {reply.Address}: bytes={reply.Buffer.Length} time={reply.RoundtripTime}ms TTL={reply.Options.Ttl}");
         }
 
-        private static void AddingInfoAboutPingToList(PingReply reply, List<string> pings)
+        private static void AddingInfoAboutPingToList(PingReply reply, List<string> pings,bool PingWasSuccessful)
         {
             var index = pings.Count;
             if (index > BorderOfPrintingList)
@@ -103,8 +112,15 @@ namespace pings
                 Console.SetCursorPosition(0, CursorUnderHeadY);
             }
 
-            pings.Add(
-                $"reply from  {reply.Address}: bytes={reply.Buffer.Length} time={reply.RoundtripTime}ms TTL={reply.Options.Ttl}");
+            if (PingWasSuccessful)
+            {
+				pings.Add(
+					$"reply from  {reply.Address}: bytes={reply.Buffer.Length} time={reply.RoundtripTime}ms TTL={reply.Options.Ttl}");
+			}
+            else
+            {
+	            pings.Add($"{reply.Status.ToString()}");
+            }
         }
 
         private static void MoveList(int oldIndex)
